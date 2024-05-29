@@ -2,4 +2,7 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <!--    App Palette Colors  -->
+    <color name="timetomic_blue">#1D2B37</color>
+    <color name="timetomic_orange">#E54A36</color>
 </resources>

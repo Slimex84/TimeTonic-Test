@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Style of the app -->
+    <style name="TimeTonic" parent="Theme.TimeTonicTest">
+        <item name="colorPrimary">@color/timetomic_orange</item>
+        <item name="colorSecondary">@color/timetomic_blue</item>
+    </style>
+
+    <!-- Style of the TextInputs -->
+    <style name="TextInputStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">@color/timetomic_orange</item>
+        <item name="endIconTint">@color/white</item>
+        <item name="hintTextColor">@color/white</item>
+    </style>
+
+</resources>

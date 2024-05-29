@@ -33,6 +33,9 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+    buildFeatures {
+        viewBinding = true
+    }
 }
 
 dependencies {
@@ -42,6 +45,14 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+    // ViewModel
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.1")
+    // LiveData
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.8.1")
+    // Fragment
+    implementation("androidx.fragment:fragment-ktx:1.7.1")
+    // Activity
+    implementation("androidx.activity:activity-ktx:1.9.0")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

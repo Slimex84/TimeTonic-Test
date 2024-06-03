@@ -39,13 +39,24 @@ class LoginViewModel(private val repository: Repository) : ViewModel() {
                 }
             } catch (e: Exception) {
                 Log.e("LoginViewModel", "Exception: ${e.message}", e)
-                _appKeyResponse.postValue(Response.error(500, ResponseBody.create(null, "Error: ${e.message}")))
+                _appKeyResponse.postValue(
+                    Response.error(
+                        500,
+                        ResponseBody.create(null, "Error: ${e.message}")
+                    )
+                )
             }
         }
     }
 
     // Función para crear OAuthKey en ViewModel
-    fun createOauthKey(version: String, req: String, login: String, password: String, appKey: String) {
+    fun createOauthKey(
+        version: String,
+        req: String,
+        login: String,
+        password: String,
+        appKey: String
+    ) {
         viewModelScope.launch {
             try {
                 val cleanLogin = login.trim()  // Limpiar valor
@@ -70,7 +81,8 @@ class LoginViewModel(private val repository: Repository) : ViewModel() {
                 val clean_o_u = o_u.trim()  // Limpiar valor
                 val clean_u_c = u_c.trim()  // Limpiar valor
 
-                val response = repository.createSessKey(version, req, clean_o_u, clean_u_c, oauthkey)
+                val response =
+                    repository.createSessKey(version, req, clean_o_u, clean_u_c, oauthkey)
                 if (response.isSuccessful) {
                     _sessKeyResponse.postValue(response)
                 } else {
@@ -80,7 +92,12 @@ class LoginViewModel(private val repository: Repository) : ViewModel() {
                 }
             } catch (e: Exception) {
                 Log.e("LoginViewModel", "Exception: ${e.message}", e)
-                _sessKeyResponse.postValue(Response.error(500, ResponseBody.create(null, "Error: ${e.message}")))
+                _sessKeyResponse.postValue(
+                    Response.error(
+                        500,
+                        ResponseBody.create(null, "Error: ${e.message}")
+                    )
+                )
             }
         }
     }

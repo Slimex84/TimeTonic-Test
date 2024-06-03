@@ -1,6 +1,5 @@
 package com.example.timetonictest.ui.view.landing
 
-
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,7 +30,8 @@ class BooksAdapter : ListAdapter<Book, BooksAdapter.BookViewHolder>(BookDiffCall
 
         fun bind(book: Book) {
             titleTextView.text = book.ownerPrefs.title
-            val coverUrl = "https://timetonic.com/live/dbi/in/tb/${book.b_o}/${book.b_c}/${book.ownerPrefs.oCoverImg}"
+            val coverUrl =
+                "https://timetonic.com/live/dbi/in/tb/${book.b_o}/${book.b_c}/${book.ownerPrefs.oCoverImg}"
             Glide.with(itemView.context)
                 .load(coverUrl)
                 .into(coverImageView)

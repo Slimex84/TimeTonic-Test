@@ -18,7 +18,6 @@ import com.example.timetonictest.ui.view.landing.LandingPageActivity
 import com.example.timetonictest.ui.viewmodel.LoginViewModel
 import com.example.timetonictest.ui.viewmodel.LoginViewModelFactory
 
-
 class LoginActivity : AppCompatActivity() {
 
     // Proporciona una instancia de ApiService aquí
@@ -120,7 +119,10 @@ class LoginActivity : AppCompatActivity() {
             } else {
                 val errorMessage = response.errorBody()?.string() ?: "Unknown error"
                 showError("Failed to create sesskey: $errorMessage")
-                Log.e("LoginActivity", "Failed to create sesskey: ${response.code()} - $errorMessage")
+                Log.e(
+                    "LoginActivity",
+                    "Failed to create sesskey: ${response.code()} - $errorMessage"
+                )
                 Log.e("LoginActivity", "Full response: ${response.raw().toString()}")
             }
         })

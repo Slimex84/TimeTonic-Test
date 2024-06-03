@@ -14,4 +14,10 @@
         <item name="hintTextColor">@color/white</item>
     </style>
 
+    <!-- Roundedf style for the cover bookss -->
+    <style name="roundedImageView">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">5%</item>
+    </style>
+
 </resources>

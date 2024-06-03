@@ -13,20 +13,26 @@ import kotlinx.coroutines.launch
 import okhttp3.ResponseBody
 import retrofit2.Response
 
+// ViewModel for handling login-related operations.
 class LoginViewModel(private val repository: Repository) : ViewModel() {
 
+    // LiveData for storing session token
     private val _sessionToken = MutableLiveData<String?>()
     val sessionToken: MutableLiveData<String?> = _sessionToken
 
+    // LiveData for storing responses from createAppKey requests
     private val _appKeyResponse = MutableLiveData<Response<CreateAppKeyResponse>>()
     val appKeyResponse: LiveData<Response<CreateAppKeyResponse>> get() = _appKeyResponse
 
+    // LiveData for storing responses from createOauthKey requests
     private val _oauthKeyResponse = MutableLiveData<Response<CreateOauthKeyResponse>>()
     val oauthKeyResponse: LiveData<Response<CreateOauthKeyResponse>> get() = _oauthKeyResponse
 
+    // LiveData for storing responses from createSessKey requests
     private val _sessKeyResponse = MutableLiveData<Response<CreateSessKeyResponse>>()
     val sessKeyResponse: LiveData<Response<CreateSessKeyResponse>> get() = _sessKeyResponse
 
+    // Function to create an application key.
     fun createAppKey(version: String, req: String, appname: String) {
         viewModelScope.launch {
             try {
@@ -49,7 +55,7 @@ class LoginViewModel(private val repository: Repository) : ViewModel() {
         }
     }
 
-    // Función para crear OAuthKey en ViewModel
+    // Function to create an OAuth key.
     fun createOauthKey(
         version: String,
         req: String,
@@ -59,7 +65,7 @@ class LoginViewModel(private val repository: Repository) : ViewModel() {
     ) {
         viewModelScope.launch {
             try {
-                val cleanLogin = login.trim()  // Limpiar valor
+                val cleanLogin = login.trim()  // Clean login value (remove spaces)
                 val response = repository.createOauthKey(version, req, cleanLogin, password, appKey)
                 if (response.isSuccessful) {
                     _oauthKeyResponse.postValue(response)
@@ -75,11 +81,12 @@ class LoginViewModel(private val repository: Repository) : ViewModel() {
         }
     }
 
+    // Function to create a session key.
     fun createSesskey(version: String, req: String, o_u: String, u_c: String, oauthkey: String) {
         viewModelScope.launch {
             try {
-                val clean_o_u = o_u.trim()  // Limpiar valor
-                val clean_u_c = u_c.trim()  // Limpiar valor
+                val clean_o_u = o_u.trim()  // Clean o_u value (remove spaces)
+                val clean_u_c = u_c.trim()  // Clean u_c value (remove spaces)
 
                 val response =
                     repository.createSessKey(version, req, clean_o_u, clean_u_c, oauthkey)

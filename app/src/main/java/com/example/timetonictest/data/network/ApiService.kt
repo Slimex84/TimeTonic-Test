@@ -38,8 +38,8 @@ interface ApiService {
         @Field("oauthkey") oauthkey: String
     ): Response<CreateSessKeyResponse>
 
-    @FormUrlEncoded
     @POST("/live/api.php")
+    @FormUrlEncoded
     suspend fun getAllBooks(
         @Field("version") version: String,
         @Field("req") req: String,

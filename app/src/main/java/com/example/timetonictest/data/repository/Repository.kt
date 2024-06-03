@@ -1,5 +1,6 @@
 package com.example.timetonictest.data.repository
 
+import android.util.Log
 import com.example.timetonictest.data.model.GetAllBooksResponse
 import retrofit2.Response
 import com.example.timetonictest.data.model.CreateAppKeyResponse
@@ -23,7 +24,7 @@ class Repository(private val apiService: ApiService) {
         password: String,
         appkey: String
     ): Response<CreateOauthKeyResponse> {
-        val cleanLogin = login.trim()  // Limpiar valor
+        val cleanLogin = login.trim()  // Clean the value (remove spaces)
         return apiService.createOauthKey(version, req, cleanLogin, password, appkey)
     }
 
@@ -34,8 +35,8 @@ class Repository(private val apiService: ApiService) {
         u_c: String,
         oauthkey: String
     ): Response<CreateSessKeyResponse> {
-        val clean_o_u = o_u.trim()  // Limpiar valor
-        val clean_u_c = u_c.trim()  // Limpiar valor
+        val clean_o_u = o_u.trim()  // Clean the value (remove spaces)
+        val clean_u_c = u_c.trim()  // Clean the value (remove spaces)
         return apiService.createSessKey(version, req, clean_o_u, clean_u_c, oauthkey)
     }
 
@@ -46,6 +47,10 @@ class Repository(private val apiService: ApiService) {
         u_c: String,
         sesskey: String
     ): Response<GetAllBooksResponse> {
+        Log.d(
+            "Repository",
+            "Fetching books with version: $version, o_u: $o_u, u_c: $u_c, sesskey: $sesskey"
+        )
         return apiService.getAllBooks(version, req, o_u, u_c, sesskey)
     }
 }

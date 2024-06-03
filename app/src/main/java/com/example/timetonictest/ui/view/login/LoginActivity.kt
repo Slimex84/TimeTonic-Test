@@ -58,7 +58,13 @@ class LoginActivity : AppCompatActivity() {
                 if (appKey != null) {
                     val login = editTextEmail.text.toString()
                     val password = editTextPassword.text.toString()
-                    loginViewModel.createOauthKey("6.49q/6.49", "createOauthkey", login, password, appKey)
+                    loginViewModel.createOauthKey(
+                        "6.49q/6.49",
+                        "createOauthkey",
+                        login,
+                        password,
+                        appKey
+                    )
                     Toast.makeText(this, "Get AppKey Successful", Toast.LENGTH_SHORT).show()
                 } else {
                     showError("Failed to get appKey")
@@ -66,24 +72,32 @@ class LoginActivity : AppCompatActivity() {
             } else {
                 val errorMessage = response.errorBody()?.string() ?: "Unknown error"
                 showError("Failed to create appKey: $errorMessage")
-                Log.e("LoginActivity", "Failed to create appKey: ${response.code()} - $errorMessage")
+                Log.e(
+                    "LoginActivity",
+                    "Failed to create appKey: ${response.code()} - $errorMessage"
+                )
                 Log.e("LoginActivity", "Full response: ${response.raw().toString()}")
             }
         })
 
-        // Observers for the LiveData from ViewModel
+        // Observador para la respuesta de OAuthKey
         loginViewModel.oauthKeyResponse.observe(this, Observer { response ->
-            Log.d("LoginActivity", "OAuthKey Response: ${response.raw().toString()}")
             if (response.isSuccessful) {
                 val oauthKeyResponse = response.body()
-                if (oauthKeyResponse  != null) {
-                    val login = editTextEmail.text.toString()
+                if (oauthKeyResponse?.status == "ok") {
                     val oauthKey = oauthKeyResponse.oauthkey
-                    Log.d("LoginActivity", "Creating Sesskey with oauthKey: $oauthKey, o_u: $login")
-                    if (oauthKey != null) {
-                        loginViewModel.createSesskey("6.49q/6.49", "createSesskey", login, login, oauthKey)
+                    val o_u = oauthKeyResponse.o_u  // Obtén o_u de la respuesta
+                    val u_c = o_u  // Usa el mismo valor para u_c
+                    if (oauthKey != null && o_u != null && u_c != null) {
+                        loginViewModel.createSesskey(
+                            "6.49q/6.49",
+                            "createSesskey",
+                            o_u,
+                            u_c,
+                            oauthKey
+                        )
+                        Toast.makeText(this, "Get Oauthkey Successful", Toast.LENGTH_SHORT).show()
                     }
-                    Toast.makeText(this, "Get Oauthkey Successful", Toast.LENGTH_SHORT).show()
                 } else {
                     showError("Failed to get oauthKey")
                 }
@@ -92,15 +106,14 @@ class LoginActivity : AppCompatActivity() {
             }
         })
 
-        // Observador para la respuesta de SessKey
         loginViewModel.sessKeyResponse.observe(this, Observer { response ->
             Log.d("LoginActivity", "SessKey Response: ${response.raw().toString()}")
             if (response.isSuccessful) {
                 val sesskeyResponse = response.body()
-                if (sesskeyResponse != null) {
-                    // Maneja la creación exitosa de la sesskey
+                if (sesskeyResponse?.status == "ok" && sesskeyResponse.sesskey != null) {
+                    val sesskey = sesskeyResponse.sesskey
                     Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show()
-                    goToLandingPage()
+                    goToLandingPage(sesskey)
                 } else {
                     showError("Failed to get sesskey: ${sesskeyResponse?.errorMsg}")
                 }
@@ -117,91 +130,10 @@ class LoginActivity : AppCompatActivity() {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
-    private fun goToLandingPage() {
+    // Función para navegar a la página de aterrizaje
+    private fun goToLandingPage(sesskey: String) {
         val intent = Intent(this, LandingPageActivity::class.java)
+        intent.putExtra("sesskey", sesskey)
         startActivity(intent)
     }
 }
-
-
-//class LoginActivity : AppCompatActivity() {
-//
-////    // Proporciona una instancia de Repository aquí
-////    private val repository: Repository = Repository()
-//    private lateinit var binding: ActivityLoginBinding
-//    private val loginViewModel: LoginViewModel by viewModels()
-//
-////    // Usa LoginViewModelFactory para obtener el ViewModel
-////    private val loginViewModel: LoginViewModel by viewModels {
-////        LoginViewModelFactory(repository)
-////    }
-//
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//        binding = ActivityLoginBinding.inflate(layoutInflater)
-//        enableEdgeToEdge()
-//        setContentView(binding.root)
-//
-//        val editTextEmail = findViewById<EditText>(R.id.editTextEmail)
-//        val editTextPassword = findViewById<EditText>(R.id.editTextPassword)
-//        val buttonLogin = findViewById<Button>(R.id.buttonLogin)
-//
-//        buttonLogin.setOnClickListener {
-//            val login = editTextEmail.text.toString()
-//            val password = editTextPassword.text.toString()
-//            if (login.isNotBlank() && password.isNotBlank()) {
-//                loginViewModel.createAppKey("6.49q/6.49", "createAppKey", "TimeTonicTest")
-//            } else {
-//                showError("Please enter your login and password")
-//            }
-//        }
-//
-//        // Observers for the LiveData from ViewModel
-//        loginViewModel.appKeyResponse.observe(this, Observer { response ->
-//            if (response.isSuccessful) {
-//                val appKey = response.body()?.appkey
-//                if (appKey != null) {
-//                    val login = editTextEmail.text.toString()
-//                    val password = editTextPassword.text.toString()
-//                    loginViewModel.createOauthKey("6.49q/6.49", "createOauthKey", login, password, appKey)
-//                } else {
-//                    showError("Failed to get appKey")
-//                }
-//            } else {
-//                showError("Failed to create appKey")
-//            }
-//        })
-//
-//        loginViewModel.oauthKeyResponse.observe(this, Observer { response ->
-//            if (response.isSuccessful) {
-//                val oauthKey = response.body()?.oauthkey
-//                if (oauthKey != null) {
-//                    // Replace "your_o_u" and "your_u_c" with the actual values
-//                    loginViewModel.createSesskey("6.49q/6.49", "createSesskey", "your_o_u", "your_u_c", oauthKey)
-//                } else {
-//                    showError("Failed to get oauthKey")
-//                }
-//            } else {
-//                showError("Failed to create oauthKey")
-//            }
-//        })
-//
-//        loginViewModel.sessKeyResponse.observe(this, Observer { response ->
-//            if (response.isSuccessful) {
-//                val sesskey = response.body()?.sesskey
-//                if (sesskey != null) {
-//                    // Handle successful sesskey creation
-//                    Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show()
-//                } else {
-//                    showError("Failed to get sesskey")
-//                }
-//            } else {
-//                showError("Failed to create sesskey")
-//            }
-//        })
-//    }
-//
-//    private fun showError(message: String) {
-//        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-//    }
-//}

@@ -13,7 +13,7 @@ import com.bumptech.glide.Glide
 import com.example.timetonictest.R
 import com.example.timetonictest.data.model.Book
 
-class BooksAdapter(books: Any) : ListAdapter<Book, BooksAdapter.BookViewHolder>(BookDiffCallback()) {
+class BooksAdapter : ListAdapter<Book, BooksAdapter.BookViewHolder>(BookDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_book, parent, false)
@@ -30,7 +30,7 @@ class BooksAdapter(books: Any) : ListAdapter<Book, BooksAdapter.BookViewHolder>(
         private val coverImageView: ImageView = itemView.findViewById(R.id.imageViewBookCover)
 
         fun bind(book: Book) {
-            titleTextView.text = book.b_c
+            titleTextView.text = book.ownerPrefs.title
             val coverUrl = "https://timetonic.com/live/dbi/in/tb/${book.b_o}/${book.b_c}/${book.ownerPrefs.oCoverImg}"
             Glide.with(itemView.context)
                 .load(coverUrl)

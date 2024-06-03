@@ -3,11 +3,7 @@ package com.example.timetonictest.data.model
 data class GetAllBooksResponse(
     val status: String,
     val sstamp: Long,
-    val allBooks: AllBooks
-)
-
-data class AllBooks(
-    val books: List<Book>
+    val allBooks: List<Book>
 )
 
 data class Book(

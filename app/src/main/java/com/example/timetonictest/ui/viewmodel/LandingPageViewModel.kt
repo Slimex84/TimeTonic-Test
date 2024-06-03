@@ -17,9 +17,9 @@ class LandingPageViewModel : ViewModel() {
     private val _booksResponse = MutableLiveData<Response<GetAllBooksResponse>>()
     val booksResponse: LiveData<Response<GetAllBooksResponse>> = _booksResponse
 
-    fun getAllBooks(sesskey: String, u_c: String) {
+    fun getAllBooks(version: String, req: String, o_u: String, u_c: String, sesskey: String) {
         viewModelScope.launch {
-            val response = repository.fetchBooks(sesskey, u_c)
+            val response = repository.fetchBooks(version, req, o_u, u_c, sesskey)
             _booksResponse.postValue(response)
         }
     }

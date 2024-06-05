@@ -1,7 +1,10 @@
 package com.example.timetonictest.ui.view.landing;
 
+import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.Button
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -9,6 +12,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.timetonictest.R
+import com.example.timetonictest.ui.view.login.LoginActivity
 import com.tuapp.viewmodel.LandingPageViewModel
 
 /**
@@ -24,6 +28,9 @@ class LandingPageActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_landing_page)
+
+        // Sign out button initialized
+        val buttonSignOut: Button = findViewById(R.id.buttonSignOut)
 
         // Retrieve session key and username from the intent extras.
         val sesskey = intent.getStringExtra("sesskey")
@@ -54,6 +61,17 @@ class LandingPageActivity : AppCompatActivity() {
             // Show error message if session data is invalid.
             showError("Invalid session data")
         }
+
+        // Set an OnClickListener for the login button.
+        buttonSignOut.setOnClickListener {
+            goToLoginScreen()
+        }
+    }
+
+    // Keep login session
+    public override fun onStart() {
+        super.onStart()
+
     }
 
     // Sets up the RecyclerView with a BooksAdapter and a LinearLayoutManager.
@@ -68,5 +86,20 @@ class LandingPageActivity : AppCompatActivity() {
     // Displays an error message using a Toast.
     private fun showError(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    }
+
+    // Control of the back button
+    @SuppressLint("MissingSuperCall")
+    override fun onBackPressed() {
+        val startHomeScreen = Intent(Intent.ACTION_MAIN)
+        startHomeScreen.addCategory(Intent.CATEGORY_HOME)
+        startHomeScreen.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        startActivity(startHomeScreen)
+    }
+
+    // Go to the login screen
+    private fun goToLoginScreen() {
+        val intent = Intent(this, LoginActivity::class.java)
+        startActivity(intent)
     }
 }

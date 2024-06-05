@@ -1,5 +1,6 @@
 package com.example.timetonictest.ui.view.login
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -162,5 +163,14 @@ class LoginActivity : AppCompatActivity() {
         intent.putExtra("sesskey", sesskey)
         intent.putExtra("username", username)
         startActivity(intent)
+    }
+
+    // Control of the back button
+    @SuppressLint("MissingSuperCall")
+    override fun onBackPressed() {
+        val startHomeScreen = Intent(Intent.ACTION_MAIN)
+        startHomeScreen.addCategory(Intent.CATEGORY_HOME)
+        startHomeScreen.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        startActivity(startHomeScreen)
     }
 }

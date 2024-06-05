@@ -12,11 +12,11 @@ class LoginViewModelFactory(private val repository: Repository) : ViewModelProvi
     // Creates a new instance of the given ViewModel class.
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        // Check if the modelClass is assignable from LoginViewModel
+        // Check if the modelClass is assignable from LoginViewModel.
         if (modelClass.isAssignableFrom(LoginViewModel::class.java)) {
             return LoginViewModel(repository) as T
         }
-        // Throw an exception if the ViewModel class is unknown
+        // Throw an exception if the ViewModel class is unknown.
         throw IllegalArgumentException("Unknown ViewModel class")
     }
 }

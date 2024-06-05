@@ -1,6 +1,7 @@
 package com.example.timetonictest.ui.view.login
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -35,7 +36,11 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
 
     // Username to be used in the session.
-    var username: String = ""
+    private var username: String = ""
+
+    // saveSessionAppKey and saveSessionOauthKey to be used on shared preferences.
+    private var saveSessionAppKey: String = ""
+    private var saveSessionOauthKey: String = ""
 
     // ViewModel instance with a factory for creating the ViewModel with dependencies.
     private val loginViewModel: LoginViewModel by viewModels {
@@ -49,7 +54,7 @@ class LoginActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(binding.root)
 
-        // Initialize login components..
+        // Initialize login components.
         val editTextEmail = findViewById<EditText>(R.id.editTextEmail)
         val editTextPassword = findViewById<EditText>(R.id.editTextPassword)
         val buttonLogin = findViewById<Button>(R.id.buttonLogin)
@@ -70,18 +75,22 @@ class LoginActivity : AppCompatActivity() {
         // Observer for the AppKey response from the ViewModel.
         loginViewModel.appKeyResponse.observe(this, Observer { response ->
             if (response.isSuccessful) {
-                val appKey = response.body()?.appkey
-                if (appKey != null) {
+                val appKeyResponse = response.body()
+                if (appKeyResponse != null) {
                     // Request to create OAuthKey using the retrieved AppKey.
                     val login = editTextEmail.text.toString()
                     val password = editTextPassword.text.toString()
-                    loginViewModel.createOauthKey(
-                        "6.49q/6.49",
-                        "createOauthkey",
-                        login,
-                        password,
-                        appKey
-                    )
+                    val appkey = appKeyResponse?.appkey
+                    if (appkey != null) {
+                        loginViewModel.createOauthKey(
+                            "6.49q/6.49",
+                            "createOauthkey",
+                            login,
+                            password,
+                            appkey
+                        )
+                    }
+                    saveSessionAppKey = appKeyResponse.appkey.toString()
                     Toast.makeText(this, "Get AppKey Successful", Toast.LENGTH_SHORT).show()
                 } else {
                     showError("Failed to get appKey")
@@ -104,8 +113,8 @@ class LoginActivity : AppCompatActivity() {
                 val oauthKeyResponse = response.body()
                 if (oauthKeyResponse?.status == "ok") {
                     val oauthKey = oauthKeyResponse.oauthkey
-                    val o_u = oauthKeyResponse.o_u  // Obtain o_u from the response
-                    val u_c = o_u  // Use the same value for u_c
+                    val o_u = oauthKeyResponse.o_u  // Obtain o_u from the response.
+                    val u_c = o_u  // Use the same value for u_c.
                     if (oauthKey != null && o_u != null && u_c != null) {
                         // Request to create Sesskey using the retrieved OAuthKey.
                         loginViewModel.createSesskey(
@@ -115,8 +124,9 @@ class LoginActivity : AppCompatActivity() {
                             u_c,
                             oauthKey
                         )
-                        // Set the o_u response to the variable username
+                        // Set the o_u response to the variable username.
                         username = oauthKeyResponse.o_u
+                        saveSessionOauthKey = oauthKeyResponse.oauthkey
                         Toast.makeText(this, "Get Oauthkey Successful", Toast.LENGTH_SHORT).show()
                     }
                 } else {
@@ -135,6 +145,7 @@ class LoginActivity : AppCompatActivity() {
                 if (sesskeyResponse?.status == "ok" && sesskeyResponse.sesskey != null) {
                     val sesskey = sesskeyResponse.sesskey
                     Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show()
+                    saveSessionData(username, saveSessionAppKey, saveSessionOauthKey, sesskey)
                     // Navigate to the landing page with the retrieved Sesskey and username.
                     goToLandingPage(sesskey, username)
                 } else {
@@ -153,6 +164,12 @@ class LoginActivity : AppCompatActivity() {
         })
     }
 
+    // Override the onStart function to perform actions when the activity starts.
+    override fun onStart() {
+        super.onStart()
+        checkSession() // Check if there is an active session.
+    }
+
     private fun showError(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
@@ -165,12 +182,42 @@ class LoginActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    // Control of the back button
+    // Control of the back button.
     @SuppressLint("MissingSuperCall")
     override fun onBackPressed() {
         val startHomeScreen = Intent(Intent.ACTION_MAIN)
         startHomeScreen.addCategory(Intent.CATEGORY_HOME)
         startHomeScreen.flags = Intent.FLAG_ACTIVITY_NEW_TASK
         startActivity(startHomeScreen)
+    }
+
+    // Function to save session data in SharedPreferences.
+    private fun saveSessionData(
+        username: String,
+        appKey: String,
+        oauthKey: String,
+        sesskey: String
+    ) {
+        val sharedPreferences = getSharedPreferences("SessionPrefs", Context.MODE_PRIVATE)
+        with(sharedPreferences.edit()) {
+            putString("username", username)
+            putString("appKey", appKey)
+            putString("oauthKey", oauthKey)
+            putString("sesskey", sesskey)
+            apply()
+        }
+    }
+
+    // Function to check if a user session exists.
+    private fun checkSession() {
+        // Access shared preferences to retrieve stored session data.
+        val sharedPreferences = getSharedPreferences("SessionPrefs", Context.MODE_PRIVATE)
+        val sesskey = sharedPreferences.getString("sesskey", null)
+        val username = sharedPreferences.getString("username", null)
+
+        // If session key and username exist, navigate to the landing page.
+        if (sesskey != null && username != null) {
+            goToLandingPage(sesskey, username)
+        }
     }
 }

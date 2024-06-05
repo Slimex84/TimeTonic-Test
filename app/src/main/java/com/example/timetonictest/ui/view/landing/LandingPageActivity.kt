@@ -1,6 +1,7 @@
 package com.example.timetonictest.ui.view.landing;
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -29,12 +30,14 @@ class LandingPageActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_landing_page)
 
-        // Sign out button initialized
+        // Sign out button initialized.
         val buttonSignOut: Button = findViewById(R.id.buttonSignOut)
 
         // Retrieve session key and username from the intent extras.
         val sesskey = intent.getStringExtra("sesskey")
         val username = intent.getStringExtra("username")
+        // Retrieve shared preferences for session management.
+        val sharedPreferences = getSharedPreferences("SessionPrefs", Context.MODE_PRIVATE)
 
         // Set up the RecyclerView with the adapter.
         setupRecyclerView()
@@ -64,11 +67,12 @@ class LandingPageActivity : AppCompatActivity() {
 
         // Set an OnClickListener for the login button.
         buttonSignOut.setOnClickListener {
-            goToLoginScreen()
+            clearSessionData() // Clear all stored session data.
+            goToLoginScreen()  // Apply the changes.
         }
     }
 
-    // Keep login session
+    // Keep login session.
     public override fun onStart() {
         super.onStart()
 
@@ -88,7 +92,7 @@ class LandingPageActivity : AppCompatActivity() {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
-    // Control of the back button
+    // Control of the back button.
     @SuppressLint("MissingSuperCall")
     override fun onBackPressed() {
         val startHomeScreen = Intent(Intent.ACTION_MAIN)
@@ -97,7 +101,15 @@ class LandingPageActivity : AppCompatActivity() {
         startActivity(startHomeScreen)
     }
 
-    // Go to the login screen
+    // Function to clear session data from shared preferences.
+    private fun clearSessionData() {
+        val sharedPreferences = getSharedPreferences("SessionPrefs", Context.MODE_PRIVATE)
+        with(sharedPreferences.edit()) {
+            clear()
+            apply()
+        }
+    }
+
     private fun goToLoginScreen() {
         val intent = Intent(this, LoginActivity::class.java)
         startActivity(intent)

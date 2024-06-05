@@ -24,7 +24,7 @@ class Repository(private val apiService: ApiService) {
         password: String,
         appkey: String
     ): Response<CreateOauthKeyResponse> {
-        val cleanLogin = login.trim()  // Clean the value (remove spaces)
+        val cleanLogin = login.trim()  // Clean the value (remove spaces).
         return apiService.createOauthKey(version, req, cleanLogin, password, appkey)
     }
 
@@ -35,8 +35,8 @@ class Repository(private val apiService: ApiService) {
         u_c: String,
         oauthkey: String
     ): Response<CreateSessKeyResponse> {
-        val clean_o_u = o_u.trim()  // Clean the value (remove spaces)
-        val clean_u_c = u_c.trim()  // Clean the value (remove spaces)
+        val clean_o_u = o_u.trim()  // Clean the value (remove spaces).
+        val clean_u_c = u_c.trim()  // Clean the value (remove spaces).
         return apiService.createSessKey(version, req, clean_o_u, clean_u_c, oauthkey)
     }
 

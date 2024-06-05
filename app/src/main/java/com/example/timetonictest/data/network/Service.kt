@@ -55,7 +55,7 @@ class ResponseInterceptor : Interceptor {
         val responseBody = response.body?.string() ?: ""
         // Log the raw response body
         Log.d("ResponseInterceptor", "Raw response: $responseBody")
-        // Create a new response with the same response body for further processing
+        // Create a new response with the same response body for further processing.
         return response.newBuilder()
             .body(ResponseBody.create(response.body?.contentType(), responseBody))
             .build()
@@ -95,7 +95,7 @@ class CustomGsonResponseBodyConverter<T>(
             // Attempt to parse as JSON
             adapter.fromJson(responseBodyString)
         } catch (e: Exception) {
-            // If parsing fails, return null or handle as needed
+            // If parsing fails, return null or handle as needed.
             Log.e("CustomGsonConverter", "Failed to parse JSON: $responseBodyString", e)
             null
         } finally {

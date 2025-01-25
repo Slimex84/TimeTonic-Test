@@ -17,11 +17,6 @@ This native app authenticates against Timetonic's public API. After a successful
 
 <li>Tech Stack:</li>
 
--> Native Kotlin for Android development.
-
--> REST API integration.
-
-![Kotlin](https://img.shields.io/badge/kotlin-%237F52FF.svg?style=for-the-badge&logo=kotlin&logoColor=white)
 
 <div align="left">
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/android/android-original.svg" height="40" alt="android logo"  />

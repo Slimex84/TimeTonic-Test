@@ -18,7 +18,7 @@ This native app authenticates against Timetonic's public API. After a successful
 <li>Tech Stack:</li>
 
 <div align="left">
-  <img src="https://edent.github.io/SuperTinyIcons/images/svg/android.svg" height="40" alt="android logo"  />
+  <img src="https://raw.githubusercontent.com/gilbarbara/logos/refs/heads/main/logos/android-icon.svg" height="40" alt="android logo"  />
   <img width="12" />
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/androidstudio/androidstudio-original.svg" height="40" alt="androidstudio logo"  />
   <img width="12" />
